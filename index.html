@@ -3,78 +3,106 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EduJournal — Электронный журнал</title>
+<title>EduJournal</title>
 <style>
   :root {
-    --mesh-blue: #0078d4;
-    --mesh-blue-hover: #005a9e;
-    --bg-gray: #f3f4f6;
-    --border-color: #d1d5db;
-    --text-main: #333333;
-    --text-muted: #6b7280;
-    --g5: #10b981; --g4: #3b82f6; --g3: #f59e0b; --g2: #ef4444;
+    --blue: #0078d4;
+    --blue-hover: #005a9e;
+    --bg: #f3f4f6;
+    --border: #d1d5db;
+    --text: #333;
+    --muted: #6b7280;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
-  body { background-color: var(--bg-gray); color: var(--text-main); min-height: 100vh; overflow: hidden; }
+  body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
 
-  /* АНИМАЦИЯ ЗАГРУЗКИ */
+  /* --- ЭКРАН ЗАГРУЗКИ --- */
   #loader {
-    position: fixed; inset: 0; background: #ffffff; z-index: 9999;
+    position: fixed; inset: 0; background: #fff; z-index: 9999;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.4s;
   }
-  .desk { width: 300px; height: 20px; background: #8b5a2b; border-radius: 10px; position: relative; box-shadow: 0 15px 20px rgba(0,0,0,0.1); }
-  .cat { font-size: 70px; position: absolute; bottom: 20px; left: 10%; animation: walkCat 3s infinite ease-in-out alternate; filter: drop-shadow(0 10px 5px rgba(0,0,0,0.2)); }
-  @keyframes walkCat { 0% { left: 10%; transform: translateY(0); } 50% { left: 80%; transform: translateY(-10px); } 100% { left: 10%; transform: translateY(0); } }
-  .flowers { position: absolute; bottom: 20px; width: 100%; display: flex; justify-content: space-between; padding: 0 20px; pointer-events: none; }
-  .flower { animation: bloom 1.5s infinite ease-in-out alternate; transform-origin: bottom center; }
+  .desk {
+    width: 280px; height: 15px; background: #8b5a2b; border-radius: 10px;
+    position: relative; box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+  }
+  .flowers {
+    position: absolute; bottom: 15px; width: 100%;
+    display: flex; justify-content: space-between; padding: 0 15px;
+  }
+  .flower { font-size: 35px; animation: grow 1.5s infinite alternate; transform-origin: bottom; }
   .flower:nth-child(2) { animation-delay: 0.5s; }
   .flower:nth-child(3) { animation-delay: 1s; }
-  @keyframes bloom { 0% { transform: scale(0.8) rotate(-10deg); opacity: 0.5; } 100% { transform: scale(1.2) rotate(10deg); opacity: 1; } }
-  .loader-text { margin-top: 40px; font-size: 20px; font-weight: bold; color: var(--mesh-blue); }
-
-  /* АВТОРИЗАЦИЯ */
-  #login-screen { position: fixed; inset: 0; background: var(--mesh-blue); z-index: 800; display: flex; align-items: center; justify-content: center; }
-  .login-box { background: #fff; padding: 40px; border-radius: 8px; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); text-align: center; }
-  .login-box h1 { color: #111; font-size: 24px; margin-bottom: 20px; }
-  .login-box input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 16px; }
-  .login-box button { width: 100%; padding: 12px; background: var(--mesh-blue); color: #fff; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; font-weight: bold; }
-  .login-box button:hover { background: var(--mesh-blue-hover); }
-  .hint { margin-top: 15px; font-size: 13px; color: var(--text-muted); }
-
-  /* ПРИЛОЖЕНИЕ */
-  #app { display: none; flex-direction: column; height: 100vh; }
-  .top-header { background-color: var(--mesh-blue); color: #fff; height: 56px; display: flex; align-items: center; padding: 0 24px; justify-content: space-between; }
-  .logo-area { display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: bold; }
-  .user-area { display: flex; align-items: center; gap: 12px; font-size: 14px; }
-  .avatar { width: 32px; height: 32px; background: #fff; color: var(--mesh-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-  .logout-btn { background: transparent; border: 1px solid #fff; color: #fff; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
-
-  .main-container { display: flex; flex: 1; overflow: hidden; }
-  .sidebar { width: 240px; background: #fff; border-right: 1px solid var(--border-color); padding-top: 16px; }
-  .nav-item { padding: 12px 24px; font-size: 15px; color: #4b5563; cursor: pointer; display: flex; align-items: center; gap: 12px; border-left: 4px solid transparent; }
-  .nav-item.active { background: #e6f2fc; color: var(--mesh-blue); font-weight: bold; border-left-color: var(--mesh-blue); }
-  .nav-item:hover:not(.active) { background: #f3f4f6; }
-
-  .content { flex: 1; padding: 24px; overflow-y: auto; }
-  .page-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; }
-  .page-title { font-size: 24px; font-weight: bold; }
+  @keyframes grow { from { transform: scale(0.8) rotate(-5deg); } to { transform: scale(1.1) rotate(5deg); } }
   
-  .card { background: #fff; border: 1px solid var(--border-color); border-radius: 4px; padding: 20px; }
-  .btn-add { background: var(--mesh-blue); color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+  .cat {
+    font-size: 60px; position: absolute; bottom: 15px; left: 10%;
+    animation: walk 3s infinite ease-in-out alternate;
+  }
+  @keyframes walk { from { left: 10%; } to { left: 70%; } }
 
-  .journal-table { width: 100%; border-collapse: collapse; }
-  .journal-table th, .journal-table td { border: 1px solid var(--border-color); padding: 10px; text-align: center; font-size: 14px; }
-  .journal-table th { background: #f8f9fa; color: var(--text-muted); font-weight: normal; }
-  .journal-table th.date-col { min-width: 80px; }
-  .grade-cell { cursor: pointer; transition: 0.1s; font-weight: bold; font-size: 18px; }
-  .grade-cell:hover { background: #f0f8ff; }
-  .g-5 { color: var(--g5); } .g-4 { color: var(--g4); } .g-3 { color: var(--g3); } .g-2 { color: var(--g2); }
-  .lock-icon { font-size: 16px; opacity: 0.5; cursor: not-allowed; }
+  .loader-text { margin-top: 30px; font-size: 18px; font-weight: bold; color: var(--blue); }
 
-  .sched-item { display: flex; border: 1px solid var(--border-color); padding: 12px; margin-bottom: 10px; border-radius: 4px; background: #f9fafb; }
-  .sched-time { font-weight: bold; width: 100px; color: var(--mesh-blue); }
+  /* --- ВХОД --- */
+  #login {
+    position: fixed; inset: 0; background: var(--blue); z-index: 900;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .login-box {
+    background: #fff; padding: 30px; border-radius: 8px; width: 100%; max-width: 350px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2); text-align: center;
+  }
+  .login-box h1 { color: #111; font-size: 22px; margin-bottom: 20px; }
+  .login-box input {
+    width: 100%; padding: 10px; margin-bottom: 15px;
+    border: 1px solid var(--border); border-radius: 4px; font-size: 15px;
+  }
+  .login-box button {
+    width: 100%; padding: 10px; background: var(--blue); color: #fff;
+    border: none; border-radius: 4px; font-size: 15px; cursor: pointer; font-weight: bold;
+  }
+  .login-box button:hover { background: var(--blue-hover); }
+  .hint { margin-top: 15px; font-size: 12px; color: var(--muted); }
+
+  /* --- ПРИЛОЖЕНИЕ --- */
+  #app { display: none; flex-direction: column; height: 100vh; }
+  .header {
+    background: var(--blue); color: #fff; height: 50px;
+    display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
+  }
+  .header-logo { font-weight: bold; font-size: 16px; display: flex; align-items: center; gap: 10px; }
+  .header-user { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+  .avatar { background: #fff; color: var(--blue); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+  .btn-logout { background: transparent; border: 1px solid #fff; color: #fff; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+
+  .main { display: flex; flex: 1; overflow: hidden; }
+  .sidebar { width: 220px; background: #fff; border-right: 1px solid var(--border); padding-top: 10px; }
+  .nav-btn {
+    padding: 12px 20px; cursor: pointer; font-size: 14px; color: #4b5563;
+    border-left: 3px solid transparent; display: flex; align-items: center; gap: 10px;
+  }
+  .nav-btn.active { background: #e6f2fc; color: var(--blue); font-weight: bold; border-left-color: var(--blue); }
+  .nav-btn:hover:not(.active) { background: #f3f4f6; }
+
+  .content { flex: 1; padding: 20px; overflow-y: auto; }
+  .page-title { font-size: 22px; font-weight: bold; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+  .btn-add { background: var(--blue); color: #fff; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+  .card { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 20px; }
+
+  /* Таблица */
+  .table { width: 100%; border-collapse: collapse; }
+  .table th, .table td { border: 1px solid var(--border); padding: 10px; text-align: center; font-size: 14px; }
+  .table th { background: #f8f9fa; color: var(--muted); font-weight: normal; }
+  .table th.date { min-width: 80px; }
+  
+  .grade { font-weight: bold; font-size: 18px; cursor: pointer; }
+  .g5 { color: #10b981; } .g4 { color: #3b82f6; } .g3 { color: #f59e0b; } .g2 { color: #ef4444; }
+  .lock { opacity: 0.4; cursor: not-allowed; font-size: 16px; }
+
+  /* Расписание */
+  .sched-row { display: flex; border: 1px solid var(--border); border-radius: 4px; padding: 10px; margin-bottom: 10px; background: #f9fafb; }
+  .sched-date { font-weight: bold; color: var(--blue); width: 100px; }
   
   .view { display: none; }
   .view.active { display: block; }
@@ -82,190 +110,260 @@
 </head>
 <body>
 
-  <!-- 1. АНИМАЦИЯ ЗАГРУЗКИ -->
+  <!-- 1. ЗАГРУЗКА -->
   <div id="loader">
     <div class="desk">
       <div class="flowers">
         <div class="flower">🌸</div>
-        <div class="flower">🌺</div>
         <div class="flower">🌻</div>
+        <div class="flower">🌺</div>
       </div>
       <div class="cat">🐈</div>
     </div>
     <div class="loader-text">Загрузка EduJournal...</div>
   </div>
 
-  <!-- 2. АВТОРИЗАЦИЯ -->
-  <div id="login-screen">
+  <!-- 2. ВХОД -->
+  <div id="login">
     <div class="login-box">
-      <h1>Вход в EduJournal</h1>
-      <input type="text" id="login-user" placeholder="Логин (admin или student)">
-      <input type="password" id="login-pass" placeholder="Пароль (123)">
-      <button onclick="login()">Войти</button>
+      <h1>EduJournal</h1>
+      <input type="text" id="user" placeholder="Логин (admin)">
+      <input type="password" id="pass" placeholder="Пароль (123)">
+      <button onclick="doLogin()">Войти</button>
       <div class="hint">
-        <b>Учитель:</b> admin / 123<br>
-        <b>Ученик:</b> student / 123
+        Учитель: admin / 123<br>
+        Ученик: student / 123
       </div>
     </div>
   </div>
 
   <!-- 3. ПРИЛОЖЕНИЕ -->
   <div id="app">
-    <header class="top-header">
-      <div class="logo-area">
-        <div style="background:#fff; color:var(--mesh-blue); padding:2px 8px; border-radius:4px; font-size:14px;">EduJournal</div>
-        <span>Электронный журнал</span>
+    <div class="header">
+      <div class="header-logo">
+        <span style="background:#fff; color:var(--blue); padding:2px 6px; border-radius:4px;">EduJournal</span>
       </div>
-      <div class="user-area">
-        <span id="user-display">Имя</span>
-        <div class="avatar" id="user-avatar">И</div>
-        <button class="logout-btn" onclick="logout()">Выйти</button>
+      <div class="header-user">
+        <span id="userName">Имя</span>
+        <div class="avatar" id="userAvatar">И</div>
+        <button class="btn-logout" onclick="logout()">Выйти</button>
       </div>
-    </header>
+    </div>
 
-    <div class="main-container">
-      <aside class="sidebar">
-        <div class="nav-item active" onclick="switchView('journal', this)">📓 Журнал</div>
-        <div class="nav-item" onclick="switchView('schedule', this)">📅 Расписание</div>
-      </aside>
+    <div class="main">
+      <div class="sidebar">
+        <div class="nav-btn active" onclick="showTab('journal', this)">📓 Журнал</div>
+        <div class="nav-btn" onclick="showTab('schedule', this)">📅 Расписание</div>
+      </div>
 
-      <main class="content">
-        <div id="view-journal" class="view active">
-          <div class="page-header">
-            <div class="page-title">Журнал оценок</div>
-            <div id="teacher-controls" style="display:none;">
-              <button class="btn-add" onclick="addScheduleColumn()">+ Добавить урок</button>
+      <div class="content">
+        <!-- ЖУРНАЛ -->
+        <div id="tab-journal" class="view active">
+          <div class="page-title">
+            <span>Журнал оценок</span>
+            <div id="adminBlock" style="display:none;">
+              <button class="btn-add" onclick="addLesson()">+ Добавить урок</button>
             </div>
           </div>
           <div class="card">
-            <table class="journal-table" id="journal-table"></table>
+            <table class="table" id="table">
+              <!-- Таблица генерируется скриптом -->
+            </table>
           </div>
         </div>
 
-        <div id="view-schedule" class="view">
-          <div class="page-header"><div class="page-title">Расписание</div></div>
-          <div class="card" id="schedule-list"></div>
+        <!-- РАСПИСАНИЕ -->
+        <div id="tab-schedule" class="view">
+          <div class="page-title">Расписание</div>
+          <div class="card" id="scheduleList">
+            <!-- Список генерируется скриптом -->
+          </div>
         </div>
-      </main>
+      </div>
     </div>
   </div>
 
 <script>
-  let DB = JSON.parse(localStorage.getItem('eduJournalDB')) || {
-    users: [
-      { login: 'admin', pass: '123', role: 'teacher', name: 'Петрова А.С. (Учитель)' },
-      { login: 'student', pass: '123', role: 'student', name: 'Иванов Иван' }
-    ],
-    lessons: [
-      { id: 1, date: '02.11.2026', subject: 'Алгебра' },
-      { id: 2, date: '03.11.2026', subject: 'Физика' },
-      { id: 3, date: '05.11.2026', subject: 'История' },
-      { id: 4, date: '10.11.2026', subject: 'Алгебра' }
-    ],
-    grades: { 1: { 'ivanov': 5 }, 2: { 'ivanov': 4 } }
-  };
+  // Инициализация базы данных с защитой от ошибок
+  let db;
+  try {
+    db = JSON.parse(localStorage.getItem('ej_db'));
+  } catch(e) {
+    db = null;
+  }
 
-  function saveDB() { localStorage.setItem('eduJournalDB', JSON.stringify(DB)); }
+  if (!db) {
+    db = {
+      users: [
+        { login: 'admin', pass: '123', role: 'teacher', name: 'Учитель' },
+        { login: 'student', pass: '123', role: 'student', name: 'Ученик' }
+      ],
+      lessons: [
+        { id: 1, date: '02.11.2026', subject: 'Алгебра' },
+        { id: 2, date: '03.11.2026', subject: 'Физика' },
+        { id: 3, date: '10.11.2026', subject: 'История' } // Будущая дата
+      ],
+      grades: {
+        1: { 'student': 5 },
+        2: { 'student': 4 }
+      }
+    };
+    saveDB();
+  }
+
+  function saveDB() {
+    localStorage.setItem('ej_db', JSON.stringify(db));
+  }
+
   let currentUser = null;
 
+  // Скрытие загрузки
   window.addEventListener('load', () => {
     setTimeout(() => {
       const loader = document.getElementById('loader');
-      if (loader) { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 500); }
+      if (loader) {
+        loader.style.opacity = '0';
+        setTimeout(() => loader.style.display = 'none', 400);
+      }
     }, 1500);
   });
-  setTimeout(() => { const l = document.getElementById('loader'); if (l && l.style.display !== 'none') l.style.display = 'none'; }, 3000);
 
-  function login() {
-    const u = document.getElementById('login-user').value;
-    const p = document.getElementById('login-pass').value;
-    const user = DB.users.find(x => x.login === u && x.pass === p);
+  // Вход
+  function doLogin() {
+    const l = document.getElementById('user').value.trim();
+    const p = document.getElementById('pass').value.trim();
+    const user = db.users.find(u => u.login === l && u.pass === p);
 
     if (user) {
       currentUser = user;
-      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('login').style.display = 'none';
       document.getElementById('app').style.display = 'flex';
-      document.getElementById('user-display').textContent = user.name;
-      document.getElementById('user-avatar').textContent = user.name[0];
-      if (user.role === 'teacher') document.getElementById('teacher-controls').style.display = 'block';
-      renderJournal();
+      document.getElementById('userName').textContent = user.name;
+      document.getElementById('userAvatar').textContent = user.name[0];
+      
+      // Показываем кнопку добавления урока только учителю
+      if (user.role === 'teacher') {
+        document.getElementById('adminBlock').style.display = 'block';
+      }
+
+      renderTable();
       renderSchedule();
-    } else { alert('Неверный логин или пароль!'); }
+    } else {
+      alert('Неверный логин или пароль!');
+    }
   }
 
-  function logout() { location.reload(); }
+  function logout() {
+    location.reload();
+  }
 
-  function switchView(viewId, el) {
+  // Переключение вкладок
+  function showTab(tabId, btn) {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.getElementById('view-' + viewId).classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    el.classList.add('active');
+    document.getElementById('tab-' + tabId).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
   }
 
-  function renderJournal() {
-    const table = document.getElementById('journal-table');
+  // Отрисовка журнала
+  function renderTable() {
+    const table = document.getElementById('table');
     table.innerHTML = '';
-    let trHead = '<tr><th>Предмет</th>';
-    DB.lessons.forEach(lesson => {
-      trHead += `<th class="date-col">${lesson.date}<br><span style="font-size:12px;">${lesson.subject}</span></th>`;
-    });
-    trHead += '</tr>';
-    table.innerHTML += trHead;
 
-    let trRow = '<tr><td style="text-align:left; font-weight:bold; background:#f8f9fa;">Иванов Иван</td>';
-    const now = new Date(); now.setHours(0,0,0,0);
-    
-    DB.lessons.forEach(lesson => {
+    // Заголовок
+    let thead = '<tr><th>Предмет</th>';
+    db.lessons.forEach(lesson => {
+      thead += `<th class="date">${lesson.date}<br><small>${lesson.subject}</small></th>`;
+    });
+    thead += '</tr>';
+    table.innerHTML = thead;
+
+    // Строка ученика
+    let row = '<tr><td style="text-align:left; font-weight:bold; background:#f8f9fa;">Иванов Иван</td>';
+
+    // Получаем сегодняшнюю дату без времени
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    db.lessons.forEach(lesson => {
+      // Безопасный парсинг даты (ДД.ММ.ГГГГ)
       const parts = lesson.date.split('.');
-      const lessonDate = new Date(parts[2], parts[1]-1, parts[0]);
-      const isFuture = lessonDate > now;
-      const grade = DB.grades[lesson.id] ? DB.grades[lesson.id]['ivanov'] : null;
+      let isFuture = false;
+      
+      if (parts.length === 3) {
+        const lessonDate = new Date(parts[2], parts[1] - 1, parts[0]);
+        if (lessonDate > today) isFuture = true;
+      }
+
+      const grade = db.grades[lesson.id] ? db.grades[lesson.id]['student'] : null;
 
       if (isFuture) {
-        trRow += `<td><span class="lock-icon">🔒</span></td>`;
+        // Замок для будущих дат
+        row += `<td><span class="lock">🔒</span></td>`;
       } else {
         if (grade) {
-          trRow += `<td><span class="grade-cell g-${grade}" onclick="setGrade(${lesson.id})">${grade}</span></td>`;
+          // Оценка
+          row += `<td><span class="grade g${grade}">${grade}</span></td>`;
         } else {
+          // Нет оценки
           if (currentUser.role === 'teacher') {
-            trRow += `<td onclick="setGrade(${lesson.id})" style="color:#ccc; cursor:pointer;">+</td>`;
-          } else { trRow += `<td>-</td>`; }
+            row += `<td style="color:#ccc; cursor:pointer;" onclick="setGrade(${lesson.id})">+</td>`;
+          } else {
+            row += `<td>-</td>`;
+          }
         }
       }
     });
-    trRow += '</tr>';
-    table.innerHTML += trRow;
+
+    row += '</tr>';
+    table.innerHTML += row;
   }
 
+  // Учитель ставит оценку
   function setGrade(lessonId) {
     if (currentUser.role !== 'teacher') return;
-    const g = prompt('Введите оценку (2, 3, 4 или 5):');
-    if (['2','3','4','5'].includes(g)) {
-      if (!DB.grades[lessonId]) DB.grades[lessonId] = {};
-      DB.grades[lessonId]['ivanov'] = parseInt(g);
-      saveDB(); renderJournal();
+    const g = prompt('Оценка (2, 3, 4, 5):');
+    if (g === '2' || g === '3' || g === '4' || g === '5') {
+      if (!db.grades[lessonId]) db.grades[lessonId] = {};
+      db.grades[lessonId]['student'] = parseInt(g);
+      saveDB();
+      renderTable();
     }
   }
 
-  function addScheduleColumn() {
+  // Учитель добавляет урок
+  function addLesson() {
     if (currentUser.role !== 'teacher') return;
     const subj = prompt('Название предмета:');
-    const date = prompt('Дата (в формате ДД.ММ.ГГГГ, например 15.11.2026):');
-    if (subj && date) {
-      DB.lessons.push({ id: Date.now(), date: date, subject: subj });
-      saveDB(); renderJournal(); renderSchedule();
+    const date = prompt('Дата (ДД.ММ.ГГГГ, например 15.11.2026):');
+    
+    if (subj && date && date.split('.').length === 3) {
+      db.lessons.push({ id: Date.now(), date: date, subject: subj });
+      saveDB();
+      renderTable();
+      renderSchedule();
+    } else {
+      alert('Неверный формат даты!');
     }
   }
 
+  // Отрисовка расписания
   function renderSchedule() {
-    const list = document.getElementById('schedule-list');
+    const list = document.getElementById('scheduleList');
     list.innerHTML = '';
-    const sorted = [...DB.lessons].sort((a,b) => {
-        const p1 = a.date.split('.'); const p2 = b.date.split('.');
-        return new Date(p1[2], p1[1]-1, p1[0]) - new Date(p2[2], p2[1]-1, p2[0]);
-    });
-    sorted.forEach(l => {
-      list.innerHTML += `<div class="sched-item"><div class="sched-time">${l.date}</div><div style="flex:1; font-weight:bold;">${l.subject}</div></div>`;
+
+    if (db.lessons.length === 0) {
+      list.innerHTML = '<p style="color:#999;">Уроков пока нет.</p>';
+      return;
+    }
+
+    db.lessons.forEach(l => {
+      list.innerHTML += `
+        <div class="sched-row">
+          <div class="sched-date">${l.date}</div>
+          <div style="font-weight:bold;">${l.subject}</div>
+        </div>
+      `;
     });
   }
 </script>
